@@ -105,21 +105,24 @@ def sun_location(sr,ss,timezone):
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#111111", width=3),hoverinfo="none"))
     fig.add_trace(go.Scatter(x=[2-x_sun], y=[y_sun],
                              mode='text',text=f"{'☀️' if target_time > sunrise and target_time < sunset else '🌙'}",
-                             textfont=dict(size=30,color="yellow"),
+                             textfont=dict(size=30),
                              textposition = "middle center",
                              name=f"{ct}",
                              hoverinfo="none"))
     fig.add_trace(go.Scatter(x=[0], y=[1],
                             mode='text',
                             text=[f"🌄 {r}"],
+                            textfont=dict(size=12),
                             textposition='middle right',
                             hoverinfo="none"))
     fig.add_trace(go.Scatter(x=[2], y=[1],
                             mode='text',
                             text=[f"{s} 🌇"],
+                            textfont=dict(size=12),
                             textposition='middle left',
                             hoverinfo="none"))
     fig.update_layout(
+        title=dict(text=f"Location of Sun in city"),
         xaxis=dict(visible=False, range=[-0.5, 2.5],autorange=True,fixedrange=True),
         yaxis=dict(visible=False, range=[0, 2],autorange=True,fixedrange = True),
         showlegend=False,
