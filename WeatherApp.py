@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import numpy as np
 import plotly.express as px
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta, UTC
 import base64
 import pytz
 
@@ -82,17 +82,19 @@ def sort_data(weather_data):
         return 0
     
 def sun_location(sr,ss,timezone):
-    sunrise = datetime.fromtimestamp(sr)
-    sunset = datetime.fromtimestamp(ss)
+    offset = timedelta(minutes=timezone//60)
+    sunrise = datetime.fromtimestamp(sr,UTC)
+    sunset = datetime.fromtimestamp(ss,UTC)
+    sunrise += offset
+    sunset += offset
     r = sunrise.strftime('%H:%M')
     s = sunset.strftime('%H:%M')
     now = datetime.now(pytz.utc)
-    target_timezone = pytz.FixedOffset(timezone//60)
-    target_time = now.astimezone(target_timezone)
+    target_time = now + offset
     ct = target_time.strftime('%H:%M')
     current_time = datetime.strptime(ct,'%H:%M')
     total_daylight = (sunset - sunrise).seconds
-    elapsed_time = (current_time - sunrise).seconds
+    elapsed_time = (target_time - sunrise).seconds
     angle = (elapsed_time / total_daylight) * np.pi  # angle in radians
     x_sun = 1 + np.cos(angle)
     y_sun = 1 + np.sin(angle)
@@ -100,20 +102,24 @@ def sun_location(sr,ss,timezone):
     theta = np.linspace(0, 2*np.pi, 100)
     x = 1 + np.cos(theta)
     y = 1 + np.sin(theta)
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#111111", width=3)))
-    fig.add_trace(go.Scatter(x=[2-x_sun] if timezone>0 else [x_sun], y=[y_sun] if timezone>0 else [2-y_sun],
-                             mode='text',text="🔆",textfont=dict(size=30), textposition = "middle center", name="Current Position"))
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#111111", width=3),hoverinfo="none"))
+    fig.add_trace(go.Scatter(x=[2-x_sun], y=[y_sun],
+                             mode='text',text=f"{'🔆' if target_time > sunrise and target_time < sunset else '🌙'}",
+                             textfont=dict(size=30),
+                             textposition = "middle center",
+                             name=f"{ct}",
+                             hoverinfo="none"))
     fig.add_trace(go.Scatter(x=[0, 2], y=[1, 1],
                             mode='markers+text',
-                            marker=dict(size=12, color='yellow'),
+                            marker=dict(size=10, color='yellow'),
                             text=[r, s],
-                            textposition='bottom center'))
+                            textposition='bottom center',
+                            hoverinfo="none"))
     fig.update_layout(
         xaxis=dict(visible=False, range=[-0.5, 2.5],autorange=True,fixedrange=True),
         yaxis=dict(visible=False, range=[0, 2],autorange=True,fixedrange = True),
         showlegend=False,
     )
-
     st.plotly_chart(fig,use_container_width=True)
 
 def format_timezone_offset(offset_seconds):
