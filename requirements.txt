@@ -1,0 +1,9 @@
+streamlit
+pandas
+plotly
+nbformat
+numpy
+datetime
+requests
+base64
+pytz
