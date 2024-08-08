@@ -3,6 +3,5 @@ pandas
 plotly
 nbformat
 numpy
-datetime
 requests
 pytz
