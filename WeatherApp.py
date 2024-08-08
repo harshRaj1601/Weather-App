@@ -106,11 +106,11 @@ def sun_location(sr,ss,timezone):
     fig.add_trace(go.Scatter(x=[0, 2], y=[1, 1],
                             mode='markers+text',
                             marker=dict(size=12, color='yellow'),
-                            text=[r, s] if timezone > 0 else [s,r],
+                            text=[r, s],
                             textposition='bottom center'))
     fig.update_layout(
-        xaxis=dict(visible=False, range=[-0.5, 2.5],autorange=True),
-        yaxis=dict(visible=False, range=[0, 2],autorange=True),
+        xaxis=dict(visible=False, range=[-0.5, 2.5],autorange=True,fixedrange=True),
+        yaxis=dict(visible=False, range=[0, 2],autorange=True,fixedrange = True),
         showlegend=False,
     )
 
