@@ -5,5 +5,4 @@ nbformat
 numpy
 datetime
 requests
-base64
 pytz
