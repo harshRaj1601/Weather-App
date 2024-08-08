@@ -102,7 +102,8 @@ def sun_location(sr,ss,timezone):
     theta = np.linspace(0, 2*np.pi, 100)
     x = 1 + np.cos(theta)
     y = 1 + np.sin(theta)
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#111111", width=3),hoverinfo="none"))
+    color = '#111111'
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(width=0),hoverinfo="none"))
     fig.add_trace(go.Scatter(x=[2-x_sun], y=[y_sun],
                              mode='text',text=f"{'☀️' if target_time > sunrise and target_time < sunset else '🌙'}",
                              textfont=dict(size=30),
@@ -226,6 +227,7 @@ with st.container():
         fig.update_yaxes(title="Temperature (°C)")
         st.plotly_chart(fig, use_container_width=True)
         sun_location(data["sunrise"],data["sunset"],data["timezone"])
+        
             
     else:
         st.error(f"Data of {city} is not available, Sorry!")
