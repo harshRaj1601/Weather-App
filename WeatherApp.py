@@ -14,7 +14,7 @@ st.set_page_config(
     layout="wide"
 )
 
-api_key = "49bd67e0b3eb666fba5b2548eec4f405"
+api_key = st.secrets["API_KEY"]
 base_url = "http://api.openweathermap.org/data/2.5/"
 
 def cityweather(city_name, type="weather", unit="metric"):
